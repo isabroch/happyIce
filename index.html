@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Emoji</title>
+  <style>
+    html {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .head {
+      position: relative;
+      margin: 0 auto;
+    }
+
+    .head.second {
+      width: 280px;
+      height: 280px;
+      background: url("ice2.svg") no-repeat;
+      z-index: 10;
+    }
+
+    .head.first {
+      top: 75px;
+      width: 250px;
+      height: 250px;
+      background: url("ice1.svg") no-repeat;
+      z-index: 15;
+    }
+
+    .face {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      /* transition: 0.1s; */
+    }
+
+    .face * {
+      position: absolute;
+      transition: 0.2s;
+    }
+
+    .first .face * {
+      background: #d4718a;
+    }
+
+    .second .face * {
+      background: #4d93c2;
+    }
+
+    .eye {
+      width: 10%;
+      height: 10%;
+      border-radius: 100%;
+      top: 40%;
+    }
+
+    .first .eye {
+      animation: blinking 4s infinite;
+    }
+
+    .second .eye {
+      animation: doubleBlink 7s infinite;
+    }
+
+    .left {
+      left: 20%;
+    }
+
+    .right {
+      right: 20%;
+    }
+
+    .mouth {
+      width: 20%;
+      height: 15%;
+      border-radius: 300px;
+      border-top-right-radius: 0;
+      border-top-left-radius: 0;
+      top: 48%;
+      left: calc((100% - 20%) / 2);
+    }
+
+    .cone {
+      background: url('cone.svg') no-repeat;
+      height: 450px;
+      margin: 0 auto;
+            width: 255px;
+      top: -75px;
+      position: relative;
+    }
+
+    @keyframes blinking {
+      0% {
+        height: 10%;
+        margin-top: 0%;
+      }
+
+      3% {
+        height: 2%;
+        margin-top: 6%;
+      }
+
+      8%,
+      100% {
+        height: 10%;
+        margin-top: 0%;
+      }
+    }
+
+    @keyframes doubleBlink {
+      0%, 60% {
+        height: 10%;
+        margin-top: 0%;
+      }
+
+      62% {
+        height: 2%;
+        margin-top: 6%;
+      }
+
+      64% {
+        height: 10%;
+        margin-top: 0%;
+      }
+
+      66% {
+        height: 2%;
+        margin-top: 6%;
+      }
+
+      70%, 100% {
+        height: 10%;
+        margin-top: 0%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="head first">
+    <div class="face">
+      <div class="eye left"></div>
+      <div class="eye right"></div>
+      <div class="mouth"></div>
+    </div>
+  </div>
+
+  <div class="head second">
+    <div class="face">
+      <div class="eye left"></div>
+      <div class="eye right"></div>
+      <div class="mouth"></div>
+    </div>
+  </div>
+
+  <div class="cone"></div>
+</body>
+
+<script>
+  // Variables
+  const faces = document.querySelectorAll('.face');
+
+  const maxStretch = 100;
+  const limit3D = 30;
+
+  // Functions
+  function follow(e) {
+    const {
+      offsetWidth: width,
+      offsetHeight: height
+    } = document.querySelector('html');
+    let {
+      pageX: x,
+      pageY: y
+    } = e;
+
+    const xStretch = Math.round((x / width * maxStretch) - (maxStretch / 2));
+    const yStretch = Math.round((y / width * maxStretch) - (maxStretch / 2));
+
+    // console.log(xStretch, yStretch);
+
+    faces.forEach(face => {
+      console.log(face);
+      face.style.transform = `translate(${xStretch}px, ${yStretch/1.5}px)`;
+
+      const leftEye = face.querySelector('.eye.left');
+      const rightEye = face.querySelector('.eye.right');
+      const mouth = face.querySelector('.mouth');
+
+      if (xStretch > limit3D) {
+        leftEye.style.transform = `translate(${(maxStretch / 3.5)}px)`
+        mouth.style.transform = `translate(${(maxStretch / 5)}px)`
+      } else if (xStretch < -limit3D) {
+        rightEye.style.transform = `translate(${-(maxStretch / 3.5)}px)`
+        mouth.style.transform = `translate(${-(maxStretch / 5)}px)`
+      } else {
+        leftEye.style.transform = `translate(${0}px)`
+        rightEye.style.transform = `translate(${0}px)`
+        mouth.style.transform = `translate(${0}px)`
+      }
+    });
+
+
+  }
+
+  // Event caller
+  document.addEventListener('mousemove', follow);
+</script>
+
+</html>
